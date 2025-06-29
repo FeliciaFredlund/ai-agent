@@ -2,10 +2,12 @@
 
 import unittest
 from functions.get_files_info import get_files_info
+from functions.get_file_content import get_file_content
+from config import MAX_CHARS
 
 class TestFunctions(unittest.TestCase):
     def test_get_files_info(self):
-        print("Testing get_files_info()")
+        print("\n\nTesting get_files_info()")
         print("========================")
         
         slash_bin = get_files_info("calculator", "/bin")
@@ -46,6 +48,47 @@ class TestFunctions(unittest.TestCase):
         self.assertIn("render.py", pkg)
         print("========================")
 
+
+    def test_get_file_content(self):
+        print("\n\nTesting get_file_content()")
+        print("========================")
+
+        slash_bin_slash_cat = get_file_content("calculator", "/bin/cat")
+        print("/bin/cat")
+        print(slash_bin_slash_cat)
+        self.assertEqual(slash_bin_slash_cat, 'Error: Cannot read "/bin/cat" as it is outside the permitted working directory')
+        print("========================")
+
+        not_file = get_file_content("calculator", "pkg")
+        print("pkg - not a file")
+        print(not_file)
+        self.assertEqual(not_file, 'Error: File not found or is not a regular file: "pkg"')
+        print("========================")
+
+        lorem = get_file_content("calculator", "lorem.txt")
+        print("lorem.txt")
+        print(lorem[:50], "[...]", lorem[-55:])
+        self.assertTrue(lorem.startswith("Lorem ipsum dolor sit amet,"))
+        self.assertTrue(lorem.endswith(f'[...File "lorem.txt" truncated at {MAX_CHARS} characters]'))
+        self.assertTrue(len(lorem) < MAX_CHARS + 60)
+        print("========================")
+
+        main = get_file_content("calculator", "main.py")
+        print("main.py")
+        print(main[:50], "[...]", main[-55:])
+        self.assertIn("def main()", main)
+        self.assertIn("calculator = Calculator()", main)
+        self.assertNotIn('print("AI Code Agent")', main)
+        print("========================")
+
+        calculator = get_file_content("calculator", "pkg/calculator.py")
+        print("pkg/calculator.py")
+        print(calculator[:50], "[...]", calculator[-55:])
+        self.assertIn("def _apply_operator(self, operators, values)", calculator)
+        self.assertIn("class Calculator:", calculator)
+        self.assertNotIn('def render:', calculator)
+        print("========================")
+        
 
 if __name__ == "__main__":
     unittest.main()

@@ -3,15 +3,14 @@ import os
 def get_files_info(working_directory: str, directory: str = None) -> str:
     if working_directory == None:
         return "Error: No working directory specified."
-    
-    if directory.startswith("/") or directory.startswith(".."):
-        return f'Error: Cannot list "{directory}" as it is outside the permitted working directory'
-
     if directory == None:
         directory = "."
 
     relative_path_to_directory = os.path.join(working_directory, directory)
     abs_path_to_directory = os.path.abspath(relative_path_to_directory)
+
+    if not abs_path_to_directory.startswith(os.path.abspath(working_directory)):
+        return f'Error: Cannot list "{directory}" as it is outside the permitted working directory'
 
     if not os.path.isdir(abs_path_to_directory):
         return f'Error: "{directory}" is not a directory'
