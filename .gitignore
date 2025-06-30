@@ -3,3 +3,5 @@ __pycache__/
 .env
 
 calculator/lorem.txt
+calculator/lorem2.txt
+calculator/pkg/morelorem.txt

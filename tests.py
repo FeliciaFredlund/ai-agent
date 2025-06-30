@@ -3,6 +3,7 @@
 import unittest
 from functions.get_files_info import get_files_info
 from functions.get_file_content import get_file_content
+from functions.write_file_content import write_file
 from config import MAX_CHARS
 
 class TestFunctions(unittest.TestCase):
@@ -89,6 +90,35 @@ class TestFunctions(unittest.TestCase):
         self.assertNotIn('def render:', calculator)
         print("========================")
         
+
+    def test_write_file(self):
+        print("\n\nTesting write_file()")
+        print("========================")
+
+        not_writable = write_file("calculator", "/tmp/temp.txt", "this should not be allowed")
+        print("/tmp/temp.txt")
+        print(not_writable)
+        self.assertEqual(not_writable, f'Error: Cannot write to "/tmp/temp.txt" as it is outside the permitted working directory')
+        print("========================")
+
+        not_a_file = write_file("calculator", "pkg", "this shouldn't work")
+        print("pkg/")
+        print(not_a_file)
+        self.assertEqual(not_a_file, 'Error: pkg is not a file.')
+        print("========================")
+
+        lorem2 = write_file("calculator", "lorem2.txt", "wait, this isn't lorem ipsum")
+        print("lorem2.txt")
+        print(lorem2)
+        self.assertEqual(lorem2, 'Successfully wrote to "lorem2.txt" (28 characters written)')
+        print("========================")
+
+        morelorem = write_file("calculator", "pkg/morelorem.txt", "lorem ipsum dolor sit amet")
+        print("pkg/morelorem.txt")
+        print(morelorem)
+        self.assertEqual(morelorem, 'Successfully wrote to "pkg/morelorem.txt" (26 characters written)')
+        print("========================")
+
 
 if __name__ == "__main__":
     unittest.main()

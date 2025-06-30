@@ -2,9 +2,10 @@ import os
 from config import MAX_CHARS
 
 def get_file_content(working_directory: str, file_path: str) -> str:
-    if working_directory is None:
+    '''Allows the AI Agent to read the contents of a file'''
+    if working_directory is None or working_directory == "":
         return "Error: No working directory specified."
-    if file_path is None:
+    if file_path is None or file_path == "":
         return "Error: Need a file path to get a file's content."
     
     relative_path_to_file = os.path.join(working_directory, file_path)

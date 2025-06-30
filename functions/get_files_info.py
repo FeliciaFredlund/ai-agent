@@ -1,7 +1,8 @@
 import os
 
 def get_files_info(working_directory: str, directory: str) -> str:
-    if working_directory is None:
+    '''Allows the AI Agent to get info on files in a directory'''
+    if working_directory is None or working_directory == "":
         return "Error: No working directory specified."
     if directory is None or directory == "":
         directory = "."
