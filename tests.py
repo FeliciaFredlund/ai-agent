@@ -4,6 +4,7 @@ import unittest
 from functions.get_files_info import get_files_info
 from functions.get_file_content import get_file_content
 from functions.write_file_content import write_file
+from functions.run_python_file import run_python_file
 from config import MAX_CHARS
 
 class TestFunctions(unittest.TestCase):
@@ -117,6 +118,41 @@ class TestFunctions(unittest.TestCase):
         print("pkg/morelorem.txt")
         print(morelorem)
         self.assertEqual(morelorem, 'Successfully wrote to "pkg/morelorem.txt" (26 characters written)')
+        print("========================")
+
+    def test_run_python_file(self):
+        print("\n\nTesting run_python_file()")
+        print("========================")
+
+        outside_working_directory = run_python_file("calculator", "../main.py")
+        print("../main.py - Outside working directory")
+        print(outside_working_directory)
+        self.assertEqual(outside_working_directory, 'Error: Cannot execute "../main.py" as it is outside the permitted working directory')
+        print("========================")
+
+        does_not_exist = run_python_file("calculator", "nonexistent.py")
+        print("nonexistent.py")
+        print(does_not_exist)
+        self.assertEqual(does_not_exist, 'Error: File "nonexistent.py" not found.')
+        print("========================")
+
+        not_python_file = run_python_file("calculator", "lorem.txt")
+        print("lorem.txt")
+        print(not_python_file)
+        self.assertEqual(not_python_file, 'Error: "lorem.txt" is not a Python file.')
+        print("========================")
+
+        main = run_python_file("calculator", "main.py")
+        print("main.py (calculator)")
+        print(main)
+        self.assertIn("STDOUT:", main)
+        print("========================")
+
+        tests = run_python_file("calculator", "tests.py")
+        print("tests.py (calculator)")
+        print(tests)
+        self.assertIn("STDERR:", tests)
+        self.assertIn(" tests in ", tests)
         print("========================")
 
 
