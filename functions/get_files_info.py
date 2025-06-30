@@ -1,9 +1,9 @@
 import os
 
-def get_files_info(working_directory: str, directory: str = None) -> str:
-    if working_directory == None:
+def get_files_info(working_directory: str, directory: str) -> str:
+    if working_directory is None:
         return "Error: No working directory specified."
-    if directory == None:
+    if directory is None or directory == "":
         directory = "."
 
     relative_path_to_directory = os.path.join(working_directory, directory)
