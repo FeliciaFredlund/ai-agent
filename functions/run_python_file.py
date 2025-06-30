@@ -1,10 +1,32 @@
 import os
 import subprocess
+from google.genai import types
+
+schema_run_python_files = types.FunctionDeclaration(
+    name="run_python_file",
+    description="Executes a Python file, located in the working directory, and returns the output from the interpreter.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="The path to the file being executed, relative to the working directory.",
+            ),
+            "args": types.Schema(
+                type=types.Type.ARRAY,
+                description="Optional arguments to pass to the Python file.",
+                items=types.Schema(
+                    type=types.Type.STRING,
+                    description='Optional argument to pass to the Python file, such as "5 + 8" or "10 - 5 * (3 + 2)".'
+                )
+            )
+        },
+        required=["file_path"],
+    ),
+)
 
 def run_python_file(working_directory: str, file_path: str, args: list = None) -> str:
-    '''Allows the AI Agent to run a Python file'''
-    if working_directory is None or working_directory == "":
-        return "Error: No working directory specified."
+    '''Allows the AI Agent to execute a Python file'''
     if file_path is None or file_path == "":
         return "Error: Need a file path."
     

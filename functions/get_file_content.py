@@ -1,10 +1,24 @@
 import os
 from config import MAX_CHARS
+from google.genai import types
+
+schema_get_file_content = types.FunctionDeclaration(
+    name="get_file_content",
+    description=f"Reads the specified file and returns the first {MAX_CHARS}, located in the working directory.",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="The path to the file being read from, relative to the working directory.",
+            ),
+        },
+        required=["file_path"],
+    ),
+)
 
 def get_file_content(working_directory: str, file_path: str) -> str:
     '''Allows the AI Agent to read the contents of a file'''
-    if working_directory is None or working_directory == "":
-        return "Error: No working directory specified."
     if file_path is None or file_path == "":
         return "Error: Need a file path to get a file's content."
     
