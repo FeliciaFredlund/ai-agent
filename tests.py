@@ -67,8 +67,8 @@ class TestFunctions(unittest.TestCase):
         self.assertEqual(not_file, 'Error: File not found or is not a regular file: "pkg"')
         print("========================")
 
-        lorem = get_file_content("calculator", "lorem.txt")
-        print("lorem.txt")
+        lorem = get_file_content("test", "lorem.txt")
+        print("test/lorem.txt")
         print(lorem[:50], "[...]", lorem[-55:])
         self.assertTrue(lorem.startswith("Lorem ipsum dolor sit amet,"))
         self.assertTrue(lorem.endswith(f'[...File "lorem.txt" truncated at {MAX_CHARS} characters]'))
@@ -108,17 +108,18 @@ class TestFunctions(unittest.TestCase):
         self.assertEqual(not_a_file, 'Error: pkg is not a file.')
         print("========================")
 
-        lorem2 = write_file_content("calculator", "lorem2.txt", "wait, this isn't lorem ipsum")
-        print("lorem2.txt")
+        lorem2 = write_file_content("test", "lorem2.txt", "wait, this isn't lorem ipsum")
+        print("test/lorem2.txt")
         print(lorem2)
         self.assertEqual(lorem2, 'Successfully wrote to "lorem2.txt" (28 characters written)')
         print("========================")
 
-        morelorem = write_file_content("calculator", "pkg/morelorem.txt", "lorem ipsum dolor sit amet")
+        morelorem = write_file_content("test", "pkg/morelorem.txt", "lorem ipsum dolor sit amet")
         print("pkg/morelorem.txt")
         print(morelorem)
         self.assertEqual(morelorem, 'Successfully wrote to "pkg/morelorem.txt" (26 characters written)')
         print("========================")
+
 
     def test_run_python_file(self):
         print("\n\nTesting run_python_file()")
@@ -136,8 +137,8 @@ class TestFunctions(unittest.TestCase):
         self.assertEqual(does_not_exist, 'Error: File "nonexistent.py" not found.')
         print("========================")
 
-        not_python_file = run_python_file("calculator", "lorem.txt")
-        print("lorem.txt")
+        not_python_file = run_python_file("test", "lorem.txt")
+        print("test/lorem.txt")
         print(not_python_file)
         self.assertEqual(not_python_file, 'Error: "lorem.txt" is not a Python file.')
         print("========================")
