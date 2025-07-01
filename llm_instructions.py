@@ -1,4 +1,5 @@
 from google.genai import types
+from config import WORKING_DIR
 from functions.get_files_info import schema_get_files_info, get_files_info
 from functions.get_file_content import schema_get_file_content, get_file_content
 from functions.run_python_file import schema_run_python_files, run_python_file
@@ -28,10 +29,10 @@ available_functions = types.Tool(
 
 def call_function(function_call_part, verbose=False):
     function_name = function_call_part.name
-    function_args = function_call_part.args
+    function_args = dict(function_call_part.args)
     
     if verbose:
-        print(f"Calling function: {function_name}({function_args})")
+        print(f" - Calling function: {function_name}({function_args})")
     else:
         print(f" - Calling function: {function_name}")
 
@@ -53,7 +54,7 @@ def call_function(function_call_part, verbose=False):
             ],
         )
     
-    function_args["working_directory"] = "./calculator"
+    function_args["working_directory"] = WORKING_DIR
     function_result = functions[function_name](**function_args)
 
     return types.Content(
@@ -84,13 +85,19 @@ def generate_content(client, messages, verbose):
     if not response.function_calls:
         return response.text
 
+    function_responses = []
     for function_call_part in response.function_calls:
         function_call_result = call_function(function_call_part, verbose)
 
-        try:
-            response = function_call_result.parts[0].function_response.response
+        if (
+            not function_call_result.parts
+            or not function_call_result.parts[0].function_response
+        ):
+            raise Exception("empty function call result")
 
-            if verbose:
-                print(f"-> {response}")
-        except:
-            raise Exception(f"Error: llm_instructions.call_function returned incorrectly.")
+        if verbose:
+            print(f"-> {function_call_result.parts[0].function_response.response}")
+        function_responses.append(function_call_result.parts[0])
+    
+    if not function_responses:
+        raise Exception("no function responses generated, exiting.")
