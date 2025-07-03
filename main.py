@@ -5,6 +5,7 @@ from google import genai
 from google.genai import types
 
 from llm_instructions import generate_content
+from config import MAX_ITERATIONS
 
 def main():
     load_dotenv()
@@ -33,7 +34,19 @@ def main():
         )
     ]
 
-    generate_content(client, messages, verbose)
+    for i in range(MAX_ITERATIONS):
+        if verbose:
+            print("\n--------------")
+            print(f"Iteration {i + 1}")
+            print("--------------")
+        
+        response = generate_content(client, messages, verbose)
+        
+        if response:
+            print(f"Result:")
+            print(response)
+            print(f"Task successfully completed.")
+            break
 
 
 if __name__ == "__main__":

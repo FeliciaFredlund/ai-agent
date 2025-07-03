@@ -78,6 +78,9 @@ def generate_content(client, messages, verbose):
         ),
     )
 
+    for candidate in response.candidates:
+        messages.append(candidate.content)
+
     if verbose:
         print("Prompt tokens:", response.usage_metadata.prompt_token_count)
         print("Response tokens:", response.usage_metadata.candidates_token_count)
@@ -97,6 +100,8 @@ def generate_content(client, messages, verbose):
 
         if verbose:
             print(f"-> {function_call_result.parts[0].function_response.response}")
+        messages.append(function_call_result)
+
         function_responses.append(function_call_result.parts[0])
     
     if not function_responses:
