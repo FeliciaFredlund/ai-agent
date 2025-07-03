@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
-from llm_instructions import generate_content
+from agent_functions import generate_content
 from config import MAX_ITERATIONS
 
 def main():
@@ -34,19 +34,28 @@ def main():
         )
     ]
 
-    for i in range(MAX_ITERATIONS):
+    iterations = 0
+    while True:
+        iterations += 1
+        if iterations > MAX_ITERATIONS:
+            print(f"Maximum iterations {MAX_ITERATIONS} reached.")
+            sys.exit(1)
+
         if verbose:
             print("\n--------------")
-            print(f"Iteration {i + 1}")
+            print(f"Iteration {iterations}")
             print("--------------")
         
-        response = generate_content(client, messages, verbose)
-        
-        if response:
-            print(f"Result:")
-            print(response)
-            print(f"Task successfully completed.")
-            break
+        try:
+            final_response = generate_content(client, messages, verbose)
+            
+            if final_response:
+                print(f"Result:")
+                print(final_response)
+                print(f"Task successfully completed.")
+                break
+        except Exception as e:
+            print(f"Error in generate_content: {e}")
 
 
 if __name__ == "__main__":
